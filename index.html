@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Facebook Live Comments</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        html {
+            background: rgba(0, 0, 0, 0);
+            overflow: hidden;
+            font-family: 'Roboto', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        #comments {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 8px;
+        }
+
+        .comment {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .comment:first-child {
+            margin-top: auto;
+        }
+
+        .comment:not(:last-child) {
+            margin-bottom: 4px;
+        }
+
+        .comment__name {
+            flex: 0 1;
+            white-space: nowrap;
+            color: #2196F3;
+        }
+
+        .comment__name::after {
+            content: ": ";
+            white-space: pre;
+        }
+
+        .comment__message {
+            flex: 1 0;
+            color: #fff;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+    </style>
+</head>
+<body>
+<div id="comments"></div>
+</body>
+<script>
+  const videoId = ""; // ID of your live video
+  const accessToken = ""; // Get one on the developer page
+
+  const source = new EventSource(`https://streaming-graph.facebook.com/${videoId}/live_comments?access_token=${accessToken}&comment_rate=one_per_two_seconds&fields=from{name},message`);
+  const comments = document.getElementById("comments");
+
+  function appendComment(comment) {
+    const newComment = document.createElement("div");
+    newComment.classList.add("comment");
+
+    const commentName = document.createElement("div");
+    commentName.classList.add("comment__name")
+    commentName.textContent = comment.from.name;
+
+    const commentMessage = document.createElement("div");
+    commentMessage.classList.add("comment__message");
+    commentMessage.textContent = comment.message;
+
+    newComment.appendChild(commentName);
+    newComment.appendChild(commentMessage);
+
+    comments.appendChild(newComment);
+
+    comments.scrollTop = comments.scrollHeight;
+  }
+
+  // Get last 10 comments
+  fetch(`https://graph.facebook.com/v3.2/${videoId}/comments?access_token=${accessToken}&summary=true&limit=10`)
+  .then(res => res.json())
+  .then(res => {
+    res.data.forEach(comment => appendComment(comment));
+  });
+
+  // Listen for new comments
+  source.onmessage = function(event) {
+    const data = JSON.parse(event.data);
+    appendComment(data);
+  };
+</script>
+</html>
