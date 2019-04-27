@@ -12,23 +12,30 @@
         }
 
         html,
-        body {
+        body,
+        #comments {
             height: 100%;
             width: 100%;
         }
 
         html {
             background: rgba(0, 0, 0, 0);
-            overflow: hidden;
             font-family: 'Roboto', sans-serif;
             letter-spacing: 0.5px;
         }
 
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
         #comments {
-            min-height: 100%;
             display: flex;
             flex-direction: column;
-            padding: 8px;
+            padding: 8px 16px 8px 8px;
+            width: 100%;
+            overflow-y: scroll;
+            box-sizing: content-box;
         }
 
         .comment {
@@ -42,6 +49,14 @@
 
         .comment:not(:last-child) {
             margin-bottom: 4px;
+        }
+
+        /**
+         * Prevent clipped comment
+         * margin-bottom: #comments padding-bottom + .comment margin-bottom
+         */
+        .comment:last-child {
+            margin-bottom: 12px;
         }
 
         .comment__name {
