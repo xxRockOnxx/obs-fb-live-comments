@@ -112,7 +112,7 @@
   }
 
   // Get last 10 comments
-  fetch(`https://graph.facebook.com/v3.2/${videoId}/comments?access_token=${accessToken}&summary=true&limit=10`)
+  fetch(`https://graph.facebook.com/v6.0/${videoId}/comments?access_token=${accessToken}&summary=true&limit=10`)
   .then(res => res.json())
   .then(res => {
     res.data.forEach(comment => appendComment(comment));
