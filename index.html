@@ -85,8 +85,10 @@
 <div id="comments"></div>
 </body>
 <script>
-  const videoId = ""; // ID of your live video
-  const accessToken = ""; // Get one on the developer page
+  const queryParams = new URLSearchParams(window.location.search)
+
+  const videoId = queryParams.get('video_id'); // ID of your live video
+  const accessToken = queryParams.get('access_token'); // Get one on graphql explorer
 
   const source = new EventSource(`https://streaming-graph.facebook.com/${videoId}/live_comments?access_token=${accessToken}&comment_rate=one_per_two_seconds&fields=from{name},message`);
   const comments = document.getElementById("comments");
@@ -113,10 +115,10 @@
 
   // Get last 10 comments
   fetch(`https://graph.facebook.com/v6.0/${videoId}/comments?access_token=${accessToken}&summary=true&limit=10`)
-  .then(res => res.json())
-  .then(res => {
-    res.data.forEach(comment => appendComment(comment));
-  });
+    .then(res => res.json())
+    .then(res => {
+      res.data.forEach(comment => appendComment(comment));
+    });
 
   // Listen for new comments
   source.onmessage = function(event) {
