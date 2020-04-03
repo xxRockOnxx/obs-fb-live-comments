@@ -2,9 +2,7 @@
 
 ## Instructions
 
-- Download the `index.html` file on this repo
-
-- Go to [Facebook developers page](https://developers.facebook.com/apps/) and create an app.
+- Go to [Facebook developers page](https://developers.facebook.com/apps/) and create an app. Don't worry you don't need to know coding. App does not mean android/ios/desktop app in this context.
 
 - Create a [Test App](https://developers.facebook.com/docs/apps/test-apps/) version of your app.<br/>
  `user_video` permission requires an App Review and to get around it since you're just using it for your personal account and not by the public is to use a Test App.
@@ -16,9 +14,9 @@
 
 - Test in Graph Explorer if you can retrieve your Live Video's info. If you can then proceed to the next step.
 
-- edit `index.html` with notepad or any editor of your choice and replace the `videoId` and `accessToken` variables in the `script` part
+- Replace `video_id` and `access_token` in the following link: https://obs-fb-live-comments.web.app?video_id=0987654321&access_token=abc123
 
-- In OBS, you can add this html file in a Browser source
+- In OBS, add the link above as your browser source.
 
 ## Contributing
 
