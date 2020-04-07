@@ -29,6 +29,10 @@
             overflow: hidden;
         }
 
+        #message {
+            padding: 16px;
+        }
+
         #comments {
             display: flex;
             flex-direction: column;
@@ -82,48 +86,135 @@
     </style>
 </head>
 <body>
-<div id="comments"></div>
+    <div id="comments"></div>
+
+    <div id="message" style="display: none;">
+        <h1>OBS Facebook Live Comments</h1>
+
+        <h2>Instructions</h2>
+
+        <ul>
+            <li>
+                <p>
+                    Go to
+                    <a href="https://developers.facebook.com/apps/" rel="nofollow"
+                    >Facebook developers page</a
+                    >
+                    and create an app. Don't worry you don't need to know coding. App does
+                    not mean android/ios/desktop app in this context.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Create a
+                    <a
+                        href="https://developers.facebook.com/docs/apps/test-apps/"
+                        rel="nofollow"
+                    >Test App</a
+                    >
+                    version of your app.<br />
+                    <code>user_video</code> permission requires an App Review and to get
+                    around it since you're just using it for your personal account and not
+                    by the public is to use a Test App.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Go to
+                    <a
+                        href="https://developers.facebook.com/tools/explorer/?method=GET&amp;path=%7Blive-video-id%7D&amp;version=v6.0"
+                        rel="nofollow"
+                    >Facebook Graph Explorer</a
+                    >
+                    and generate an Access Token.<br />
+                    <strong>Important Note</strong>: Under
+                    <code>Facebook App</code> dropdown, select the Test version of your
+                    app otherwise you will not be able to select the
+                    <code>user_video</code> permission.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Copy your Live Video's ID. ex: If your link is
+                    <code>https://www.facebook.com/1234567890/videos/0987654321</code>
+                    then your id would be <code>0987654321</code>
+                </p>
+            </li>
+            <li>
+                <p>
+                    Test in Graph Explorer if you can retrieve your Live Video's info. If
+                    you can then proceed to the next step.
+                </p>
+            </li>
+            <li>
+                <p>
+                    Replace <code>video_id</code> and <code>access_token</code> in the
+                    following link:
+                    <a
+                        href="https://obs-fb-live-comments.web.app?video_id=0987654321&amp;access_token=abc123"
+                        rel="nofollow"
+                    >https://obs-fb-live-comments.web.app?video_id=0987654321&amp;access_token=abc123</a
+                    >
+                </p>
+            </li>
+            <li>
+                <p>In OBS, add the link above as your browser source.</p>
+            </li>
+        </ul>
+
+        <h2>Issues or Suggestions</h2>
+
+        <p>
+            Head over to this website's
+            <a href="https://github.com/xxRockOnxx/obs-fb-live-comments/">GitHub repository</a>.
+        </p>
+    </div>
 </body>
 <script>
-  const queryParams = new URLSearchParams(window.location.search)
+  const queryParams = new URLSearchParams(window.location.search);
 
   const videoId = queryParams.get('video_id'); // ID of your live video
   const accessToken = queryParams.get('access_token'); // Get one on graphql explorer
 
-  const source = new EventSource(`https://streaming-graph.facebook.com/${videoId}/live_comments?access_token=${accessToken}&comment_rate=one_per_two_seconds&fields=from{name},message`);
-  const comments = document.getElementById("comments");
+  if (!videoId || !accessToken) {
+    document.getElementById('comments').style.display = 'none';
+    document.getElementById('message').style.display = null;
+  } else {
+    const source = new EventSource(`https://streaming-graph.facebook.com/${videoId}/live_comments?access_token=${accessToken}&comment_rate=one_per_two_seconds&fields=from{name},message`);
+    const comments = document.getElementById("comments");
 
-  function appendComment(comment) {
-    const newComment = document.createElement("div");
-    newComment.classList.add("comment");
+    function appendComment(comment) {
+      const newComment = document.createElement("div");
+      newComment.classList.add("comment");
 
-    const commentName = document.createElement("div");
-    commentName.classList.add("comment__name")
-    commentName.textContent = comment.from.name;
+      const commentName = document.createElement("div");
+      commentName.classList.add("comment__name")
+      commentName.textContent = comment.from.name;
 
-    const commentMessage = document.createElement("div");
-    commentMessage.classList.add("comment__message");
-    commentMessage.textContent = comment.message;
+      const commentMessage = document.createElement("div");
+      commentMessage.classList.add("comment__message");
+      commentMessage.textContent = comment.message;
 
-    newComment.appendChild(commentName);
-    newComment.appendChild(commentMessage);
+      newComment.appendChild(commentName);
+      newComment.appendChild(commentMessage);
 
-    comments.appendChild(newComment);
+      comments.appendChild(newComment);
 
-    comments.scrollTop = comments.scrollHeight;
+      comments.scrollTop = comments.scrollHeight;
+    }
+
+    // Get last 10 comments
+    fetch(`https://graph.facebook.com/v6.0/${videoId}/comments?access_token=${accessToken}&summary=true&limit=10`)
+      .then(res => res.json())
+      .then(res => {
+        res.data.forEach(comment => appendComment(comment));
+      });
+
+    // Listen for new comments
+    source.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      appendComment(data);
+    };
   }
-
-  // Get last 10 comments
-  fetch(`https://graph.facebook.com/v6.0/${videoId}/comments?access_token=${accessToken}&summary=true&limit=10`)
-    .then(res => res.json())
-    .then(res => {
-      res.data.forEach(comment => appendComment(comment));
-    });
-
-  // Listen for new comments
-  source.onmessage = function(event) {
-    const data = JSON.parse(event.data);
-    appendComment(data);
-  };
 </script>
 </html>
