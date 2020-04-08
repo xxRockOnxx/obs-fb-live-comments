@@ -183,7 +183,9 @@
     m.parentNode.insertBefore(o,m)
   })(document, window, '//lemuel-fathom.herokuapp.com/tracker.js', 'fathom');
   fathom('set', 'siteId', 'BYSKE');
-  fathom('trackPageview');
+  fathom('trackPageview', {
+    path: '/'
+  });
 </script>
 <!-- / Fathom -->
 
