@@ -11,8 +11,6 @@
             box-sizing: border-box;
         }
 
-        html,
-        body,
         #comments {
             height: 100%;
             width: 100%;
@@ -25,6 +23,36 @@
         body {
             margin: 0;
             overflow: hidden;
+        }
+
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        code {
+            padding: .2em .4em;
+            margin: 0;
+            background: rgba(27,31,35,.05);
+        }
+
+        pre {
+            padding: 16px;
+            overflow: auto;
+            line-height: 1.45;
+            background: #f6f8fa;
+        }
+
+        pre code {
+            background: initial;
+        }
+
+        ul {
+            padding-left: 2em;
+        }
+
+        li {
+            margin-top: .25em;
         }
 
         #message {
@@ -93,6 +121,9 @@
 
     <div id="message" style="display: none;">
         <h1>OBS Facebook Live Comments</h1>
+
+        <p>This is for Facebook users who do not want to create a Facebook Page and share their stream publicly just to show their comments feed on their stream.</p>
+        <p>It is not impossible but there are some steps you have to follow.</p>
 
         <h2>Instructions</h2>
 
@@ -165,6 +196,45 @@
             </li>
         </ul>
 
+        <h2>FAQs</h2>
+
+        <h3>How do I change the font-size?</h3>
+
+        <p>Open up your Browser Source and add the following Custom CSS:</p>
+
+        <pre><span class="pl-e">.comment</span> {
+  <span class="pl-c1"><span class="pl-c1">font-size</span></span>: <span class="pl-c1">24<span class="pl-k">px</span></span>; // <span class="pl-c1">the</span> <span class="pl-c1">default</span> <span class="pl-c1">is</span> 18<span class="pl-c1">px</span>
+}</pre>
+
+        <h3>The comment is clipped or not wrapping to the next line</h3>
+
+        <p>Change your Browser Source resolution.</p>
+        <p>For the default font-size of 18px, I start with 640x360.</p>
+
+        <h3>New comments are not loading anymore after an hours or two</h3>
+
+        <p>According to the Facebook <a href="https://developers.facebook.com/docs/facebook-login/access-tokens/#termtokens" rel="nofollow">documentation</a>:</p>
+
+        <blockquote>
+            <p>User access tokens come in two forms: <strong>short-lived tokens</strong> and <strong>long-lived tokens</strong>.</p>
+            <p>Short-lived tokens usually have a lifetime of about an hour or two, while long-lived tokens usually have a lifetime of about 60 days.</p>
+        </blockquote>
+
+        <p>If you are going to stream for longer hours, you have to get a long-lived-token.</p>
+
+        <p>Do the following steps to get one:</p>
+
+        <ul>
+            <li>Go Facebook <a href="https://developers.facebook.com/tools/explorer" rel="nofollow">Graph Explorer</a></li>
+            <li>Put this in the address bar:
+                <pre><code>oauth/access_token?grant_type=fb_exchange_token&amp;client_id={app-id}&amp;client_secret={app-secret}&amp;fb_exchange_token={your-access-token}
+</code></pre>
+            </li>
+            <li>Replace <code>app-id</code>, <code>app-secret</code>, and <code>your-access-token</code> with yours. Do not include the <code>{</code> and <code>}</code>.</li>
+        </ul>
+
+        <p>Note: App ID and App Secret can be found on your App's Dashboard. Go to <code>Settings</code> then <code>Basic</code>.</p>
+
         <h2>Issues or Suggestions</h2>
 
         <p>
@@ -208,6 +278,7 @@
   const accessToken = queryParams.get('access_token'); // Get one on graphql explorer
 
   if (!videoId || !accessToken) {
+    document.body.style.overflow = 'auto';
     document.getElementById('comments').style.display = 'none';
     document.getElementById('message').style.display = null;
   } else {
