@@ -6,7 +6,7 @@
   "author": "Lemuel Flores <is101.lemuel@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "postcss src/style.css -o dist/style.css && cp -r src/*.html dist/",
+    "build": "postcss src/style.css -o dist/style.css && cp -r src/*.html src/icon.png src/favicon.ico dist/",
     "lint": "eslint --ext .js,.html --ignore-path .gitignore .",
     "watch": "watch 'yarn run build' ./src"
   },
