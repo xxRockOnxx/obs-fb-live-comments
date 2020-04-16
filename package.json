@@ -1,0 +1,30 @@
+{
+  "name": "obs-fb-live",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:xxRockOnxx/obs-fb-live-comments.git",
+  "author": "Lemuel Flores <is101.lemuel@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "postcss src/style.css -o dist/style.css && cp -r src/*.html dist/",
+    "lint": "eslint --ext .js,.html --ignore-path .gitignore .",
+    "watch": "watch 'yarn run build' ./src"
+  },
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^2.1.2",
+    "babel-eslint": "^10.1.0",
+    "eslint-plugin-html": "^6.0.1",
+    "eslint-plugin-prettier": "^3.1.3",
+    "postcss-cli": "^7.1.0",
+    "prettier": "^2.0.4",
+    "tailwindcss": "^1.2.0",
+    "watch": "^1.0.2"
+  },
+  "dependencies": {
+    "@zeit/fetch": "^6.0.0",
+    "cors": "^2.8.5",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "node-fetch": "^2.6.0"
+  }
+}

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>OBS Personal FB Live Comments</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="py-12 lg:py-24 px-4 max-w-screen-xl mx-auto bg-gray-100">
+<div class="lg:grid grid-cols-2 gap-8">
+    <div>
+        <div id="unauthenticated" class="hidden">
+            <h1 class="text-3xl font-bold pb-3 border-b">OBS Facebook Live Comments</h1>
+
+            <p class="mt-4 text-lg">
+                This is for Facebook users who do not want to create a Facebook Page and share their stream publicly
+                just to show their comments feed on their stream.
+            </p>
+
+            <div class="mt-4 text-center">
+                <button
+                    type="button"
+                    class="py-2 px-4 text-white font-bold text-center shadow-md rounded"
+                    id="btn-login"
+                    style="background: #4267B2;"
+                >
+                    Login With Facebook
+                </button>
+            </div>
+        </div>
+
+        <div id="authenticated" class="hidden">
+            <div class="flex items-center pb-3 border-b">
+                <span class="text-3xl font-bold">Your Live Videos:</span>
+                <button
+                    type="button"
+                    class="ml-auto text-lg text-red-500 font-bold text-center"
+                    id="btn-logout"
+                >
+                    Logout
+                </button>
+            </div>
+
+            <ul id="list-live" class="hidden py-4"></ul>
+
+            <div id="list-empty" class="hidden mt-4 p-2 bg-yellow-200 text-yellow-600 text-center rounded">
+                <span class="font-medium">No live videos available.</span>
+                <a href="https://www.facebook.com/live/producer/" class="font-bold underline" target="_blank">Click
+                    here</a>
+                <span class="font-medium">to create Facebook Live post.</span>
+            </div>
+
+            <div id="loader" class="mt-4">
+                <div class="text-2xl text-gray-600 text-center font-medium">
+                    Getting your Facebook Live Videos...
+                </div>
+                <!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->
+                <svg
+                    class="mt-6 mx-auto"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 38 38"
+                    width="64"
+                    height="64"
+                >
+                    <defs>
+                        <linearGradient id="a" x1="8.04%" x2="65.68%" y1="0%" y2="23.86%">
+                            <stop offset="0%" stop-color="#4299E1" stop-opacity="0"/>
+                            <stop offset="63.15%" stop-color="#4299E1" stop-opacity=".63"/>
+                            <stop offset="100%" stop-color="#4299E1"/>
+                        </linearGradient>
+                    </defs>
+                    <g fill="none" fill-rule="evenodd" transform="translate(1 1)">
+                        <path stroke="url(#a)" stroke-width="2" d="M36 18A18 18 0 0018 0">
+                            <animateTransform attributeName="transform" dur="0.9s" from="0 18 18"
+                                              repeatCount="indefinite" to="360 18 18" type="rotate"/>
+                        </path>
+                        <circle cx="36" cy="18" r="1" fill="#fff">
+                            <animateTransform attributeName="transform" dur="0.9s" from="0 18 18"
+                                              repeatCount="indefinite" to="360 18 18" type="rotate"/>
+                        </circle>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-8 lg:mt-0">
+        <div id="markdown">
+            <h2>FAQs</h2>
+
+            <h3>Comments are sometimes now shown.</h3>
+
+            <p>
+                See the answer
+                <a href="https://github.com/xxRockOnxx/obs-fb-live-comments/issues/2" target="_blank">here</a>.
+            </p>
+
+            <h3>How do I change the font-size?</h3>
+
+            <p>Open up your Browser Source and add the following Custom CSS:</p>
+
+            <pre><span class="pl-e">.comment</span> {
+  <span class="pl-c1"><span class="pl-c1">font-size</span></span>: <span class="pl-c1">24<span
+                    class="pl-k">px</span></span>; // <span class="pl-c1">the</span> <span class="pl-c1">default</span> <span
+                    class="pl-c1">is</span> 20<span class="pl-c1">px</span>
+}</pre>
+
+            <h3>The comment is clipped or not wrapping to the next line.</h3>
+
+            <p>Change your Browser Source resolution.</p>
+            <p>For the default font-size of 20fpx, I start with 640x360.</p>
+
+            <h2>Tips</h2>
+
+            <p>Your <code>access_token</code> "generally lasts about 60 days", according to Facebook documentation.</p>
+
+            <p>What that means is that you don't have to log-in here every time you need a link for your stream...
+                unless it doesn't work anymore for some reason.</p>
+
+            <p>"But how?" you might ask. You can just change the <code>video_id</code> part in the link with your
+                stream's id.</p>
+
+            <p><b>Example #1</b>, If your link looks like:</p>
+            <pre>https://www.facebook.com/112233445566/videos/9876543210</pre>
+            <p>then your <code>video_id</code> is <code>9876543210</code>.</p>
+
+            <p><b>Example #2</b>, If your link looks like:</p>
+            <pre>https://www.facebook.com/live/producer/123456789</pre>
+            <p>then your <code>video_id</code> is <code>123456789</code>.</p>
+
+            <h2>Issues or Suggestions</h2>
+
+            <p>
+                Head over to this website's
+                <a href="https://github.com/xxRockOnxx/obs-fb-live-comments/">GitHub repository</a>.
+            </p>
+        </div>
+
+        <div class="mt-8">
+            <ul>
+                <li class="inline-block">
+                    <a href="/privacy" class="text-blue-500 font-medium">
+                        Privacy Policy
+                    </a>
+                </li>
+
+                <li class="inline-block mx-2">&middot;</li>
+
+                <li class="inline-block">
+                    <a href="/terms" class="text-blue-500 font-medium">
+                        Terms
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.0/firebase-auth.js"></script>
+
+<script>
+  firebase.initializeApp({
+    apiKey: "AIzaSyBVTtJ8W-CCn8k_-C9uYM8D__IM_xU8HXY",
+    authDomain: "obs-fb-live-comments.firebaseapp.com",
+    projectId: "obs-fb-live-comments",
+    appId: "1:805998869587:web:83b0c1492d7d05f2c75aa6",
+  });
+
+  function exchangeToken(accessToken) {
+    return fetch(
+      `https://obs-fb-live.now.sh/api/exchange?access_token=${accessToken}`
+    )
+      .then((res) => res.json())
+      .then((json) => json.access_token);
+  }
+
+  function loadLiveVideoList(accessToken) {
+    const list = document.getElementById("list-live");
+    const listEmpty = document.getElementById("list-empty");
+    const loader = document.getElementById("loader");
+
+    list.classList.add("hidden");
+    listEmpty.classList.add("hidden");
+    loader.classList.remove("hidden");
+
+    const params = {
+      access_token: accessToken,
+      "broadcast_status[]": "LIVE",
+      fields: ["title", "description"],
+    };
+
+    const queryString = new URLSearchParams(params).toString();
+
+    // Intentionally not adding pagination to avoid complexity.
+    // Nobody has 25+ simultaneous streams.
+    fetch(`https://graph.facebook.com/v6.0/me/live_videos?${queryString}`)
+      .then((response) => response.json())
+      .then((response) => {
+        loader.classList.add("hidden");
+
+        if (response.data.length === 0) {
+          listEmpty.classList.remove("hidden");
+          return;
+        }
+
+        list.classList.remove("hidden");
+
+        response.data.forEach((video, index) => {
+          const title = video.title;
+          const description = video.description;
+
+          const li = document.createElement("li");
+          const titleDiv = document.createElement("div");
+          const descriptionText = document.createElement("p");
+          const linkDiv = document.createElement("div");
+          const linkText = document.createElement("div");
+          const linkTagContainer = document.createElement("div");
+          const linkTag = document.createElement("a");
+
+          if (index > 0) {
+            li.classList.add("mt-6");
+          }
+
+          li.classList.add(
+            "bg-white",
+            "shadow-md",
+            "rounded-lg",
+            "overflow-hidden",
+            "border"
+          );
+
+          titleDiv.innerText = title || "(No title)";
+          titleDiv.classList.add(
+            "p-5",
+            "text-gray-800",
+            "text-2xl",
+            "font-medium",
+            "border-b"
+          );
+
+          descriptionText.innerText = description || "(No description)";
+          descriptionText.classList.add("p-5", "text-gray-600");
+
+          linkDiv.classList.add("bg-gray-200", "p-5");
+
+          if (!title) {
+            titleDiv.classList.add("italic");
+          }
+
+          if (!description) {
+            descriptionText.classList.add("italic");
+          }
+
+          li.appendChild(titleDiv);
+          li.appendChild(descriptionText);
+
+          const span = document.createElement("span");
+          const span2 = document.createElement("span");
+
+          span.innerText = "Copy the following link: ";
+          span2.innerText = "(Right-click > Copy Link Location)";
+
+          span.classList.add(
+            "text-sm",
+            "text-gray-800",
+            "font-bold",
+            "tracking-wide"
+          );
+          span2.classList.add("text-sm", "text-gray-600", "italic");
+
+          linkText.classList.add("pb-1");
+          linkText.appendChild(span);
+          linkText.appendChild(span2);
+
+          linkTag.href = `${window.location.origin}/live?access_token=${accessToken}&video_id=${video.id}`;
+          linkTag.innerText = linkTag.href;
+          linkTag.classList.add(
+            "text-blue-500",
+            "underline",
+            "whitespace-no-wrap"
+          );
+
+          linkTagContainer.classList.add("overflow-x-auto");
+          linkTagContainer.appendChild(linkTag);
+
+          linkDiv.appendChild(linkText);
+          linkDiv.appendChild(linkTagContainer);
+
+          li.appendChild(linkDiv);
+
+          list.appendChild(li);
+        });
+      });
+  }
+
+  let signedInRecently = false;
+
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user !== null) {
+      const token = localStorage.getItem("token");
+      // Force Sign-out if there's no token. We need it.
+      // Otherwise we might still be fetching
+      if (token === null && !signedInRecently) {
+        firebase.auth().signOut();
+        return;
+      }
+
+      document.getElementById("unauthenticated").classList.add("hidden");
+      document.getElementById("authenticated").classList.remove("hidden");
+
+      // Did not signed-in recently means we already have token stored
+      if (!signedInRecently) {
+        loadLiveVideoList(token);
+      }
+    } else {
+      // Return default state
+      document.getElementById("authenticated").classList.add("hidden");
+      document.getElementById("list-live").classList.add("hidden");
+      document.getElementById("list-empty").classList.add("hidden");
+      document.getElementById("loader").classList.remove("hidden");
+
+      document.getElementById("unauthenticated").classList.remove("hidden");
+    }
+  });
+
+  document.getElementById("btn-login").addEventListener("click", (evt) => {
+    const provider = new firebase.auth.FacebookAuthProvider();
+
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(async function (result) {
+        signedInRecently = true;
+
+        let accessToken = result.credential.accessToken;
+
+        try {
+          accessToken = await exchangeToken(accessToken);
+          console.log("Exchange for Long-Lived token success");
+        } catch (e) {
+          // Cannot get Long-Lived token.
+          // Use the Short-lived token instead that expires in an hour or two.
+          console.error(e);
+        }
+
+        localStorage.setItem("token", accessToken);
+        loadLiveVideoList(accessToken);
+      });
+  });
+
+  document.getElementById("btn-logout").addEventListener("click", (evt) => {
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        localStorage.removeItem("token");
+      });
+  });
+</script>
+
+<!-- Fathom - simple website analytics - https://github.com/usefathom/fathom -->
+<script>
+  (function (f, a, t, h, o, m) {
+    a[h] =
+      a[h] ||
+      function () {
+        (a[h].q = a[h].q || []).push(arguments);
+      };
+    (o = f.createElement("script")), (m = f.getElementsByTagName("script")[0]);
+    o.async = 1;
+    o.src = t;
+    o.id = "fathom-script";
+    m.parentNode.insertBefore(o, m);
+  })(document, window, "//lemuel-fathom.herokuapp.com/tracker.js", "fathom");
+  fathom("set", "siteId", "BYSKE");
+  fathom("trackPageview", {
+    path: "/",
+  });
+</script>
+<!-- / Fathom -->
+</body>
+</html>

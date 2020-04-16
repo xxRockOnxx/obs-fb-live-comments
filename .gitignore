@@ -64,7 +64,8 @@ node_modules/
 # dotenv environment variables file
 .env
 
-# we dont want this in the repo
 .idea
 .firebaserc
+.now
 firebase.json
+dist

@@ -1,0 +1,9 @@
+{
+  "routes": [
+    {
+      "src": "/api/exchange",
+      "dest": "/api/exchange",
+      "methods": ["GET"]
+    }
+  ]
+}
