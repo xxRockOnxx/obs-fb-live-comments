@@ -2,54 +2,37 @@
 
 This is for Facebook users who do not want to create a Facebook Page and share their stream publicly just to show their comments feed on their stream.
 
-https://obs-fb-live-comments.web.app/
+**Use this at your own Risk**.
 
-## FAQs
+I attempted making a proper app that allows people to login using their Facebook account and simply copying a link to their Browser Source ([see more here](https://github.com/xxRockOnxx/obs-fb-live-comments/issues/2)) similar to TidyLabs if you are DLive user, but unfortunately Facebook did not approve the app.
 
-## Comments are sometimes now shown.
+The app requires approval from Facebook so it can access your Live Streams but according to [here](https://developers.facebook.com/docs/facebook-login/permissions/#reference-user_videos):
 
-See the answer [here](https://github.com/xxRockOnxx/obs-fb-live-comments/issues/2).
+> ###user_videos
+>
+> Requires App Review
+>
+> The `user_videos` permission allows your app to read a list of videos uploaded by a user.
+>
+>  Allowed Usage:
+>  - Display a person's videos on a TV via a set-top box or display their videos in a digital photo frame.
+>  - Provide people with the ability to edit or create new video content using existing videos.
+>  - Provide people with the ability to display their video with owners within their app, like in dating or social apps.
 
-### How do I change the font-size?
+Hence, the disapproval. If I have to point it out to you, what we want is not part of the Allowed Usage.
 
-Open up your Browser Source and add the following Custom CSS:
+**BUT**, "Where there is a will, there is a way", so here you go.
 
-```css
-.comment {
-  font-size: 24px; // the default is 20px
-}
-```
+This method has a chance of not working if Facebook updated their page.
 
-### The comment is clipped or not wrapping to the next line
+When that happens, visit this website again and check for an updated instructions.
 
-Change your Browser Source resolution.
+If there's none, let me know by submitting an issue on the repo.
 
-For the default font-size of 20px, I start with 640x360.
 
-## Tips
+## Instructions
+Instructions at https://obs-fb-live-comments.web.app
 
-Your `access_token` "generally lasts about 60 days", according to Facebook documentation.
+Tired of updating both the website and this README file so just head over there.
 
-What that means is that you don't have to log-in here every time you need a link for your stream... unless it doesn't work anymore for some reason.
-
-"But how?" you might ask. You can just change the `video_id` part in the link with your stream's id.
-
-**Example #1**, If your link looks like:
-
-```
-https://www.facebook.com/112233445566/videos/9876543210
-```
-
-then your `video_id` is `9876543210`.
-
-**Example #2**, If your link looks like:
-
-```
-https://www.facebook.com/live/producer/123456789
-```
-
-then your `video_id` is `123456789`.
-
-## Contributing
-
-Feel free to fork this repo and submit a pull request.
+The website is much more visited than the repo.
