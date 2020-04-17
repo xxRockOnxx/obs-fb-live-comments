@@ -8,7 +8,7 @@ I attempted making a proper app that allows people to login using their Facebook
 
 The app requires approval from Facebook so it can access your Live Streams but according to [here](https://developers.facebook.com/docs/facebook-login/permissions/#reference-user_videos):
 
-> ###user_videos
+> ### user_videos
 >
 > Requires App Review
 >
