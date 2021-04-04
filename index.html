@@ -13,8 +13,8 @@
 
         body {
             padding: 16px;
-            font-size: 18px;
-            line-height: 1.5;
+            font-size: 20px;
+            line-height: 2;
             max-width: 896px;
             margin-left: auto;
             margin-right: auto;
@@ -92,71 +92,252 @@
         </li>
     </ul>
 </blockquote>
+
 <p>Hence, the disapproval. If I have to point it out to you, what we want is not part of the Allowed Usage.</p>
 <p><strong>BUT</strong>, “Where there is a will, there is a way”, so here you go.</p>
 <p>This method has a chance of not working if Facebook updated their page.</p>
 <p>When that happens, visit this website again and check for an updated instructions.</p>
 <p>If there's none, let me know by submitting an issue on the repo.</p>
-<h2 id="instructions">Instructions (Updated Aug 04, 2020; Facebook's new theme)</h2>
+
+<h2 id="instructions">Instructions (Updated Apr 04, 2021; Better code that doesn't rely on DOM)</h2>
 
 <div style="position: relative; padding-top: 56.25%;">
     <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/GFOedjvzV8s" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/77Ixvbi0zOc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
 </div>
 
-<ul>
-    <li>Open up OBS with remote debugging. See <a href="#how-to-start-obs-with-remote-debugging">how to</a>.</li>
+<ol style="list-style-type: decimal;">
+    <li
+      >Open up OBS with remote debugging. See <a href="#how-to-start-obs-with-remote-debugging">how to</a>.
+    </li>
+
     <li>
-        Add a Browser Source and put in your stream’s URL. Make sure there’s no custom CSS.<br>
-        <ul>
-            <li>
-                On the old Live page, right click on the time underneath your Name and above the post description.<br>
-            </li>
-            <li>
-                On the new Producer page, there's link under the "Quick Access to Your Live Video".
-            </li>
-        </ul>
+        Add a Browser Source.<br/>
+        If this is your first time, put <code>https://facebook.com</code> as the address.
     </li>
-    <li>Visit OBS’s browser on your browser by going to <a href="http://localhost:9222/">http://localhost:9222</a> (or
-        whatever port you put in).
+
+    <li>
+      Visit OBS’s browser on your browser by going to <a href="http://localhost:9222/">http://localhost:9222</a> (or whatever port you put in).
     </li>
-    <li>You will be shown available Browser Sources even those that are not toggled in OBS. Select the one with your
-        Facebook stream.
+
+    <li>
+      Click the link to that corresponds to the Browser Source you added. <br/>
+      Each Browser Source in OBS will show up as a link in here.
     </li>
-    <li>Paste the following code on the Console <strong>(Click to copy)</strong>:</li>
-</ul>
 
-<pre id="js-code"><code class="language-javascript">const ID = "obs-fb-live-comments";
-const container = document.createElement("div");
+    <li>
+      If this was your first time, Log In to Facebook because later on we will need to go to your stream's direct link.
+    </li>
 
-// Create our very own container
-container.id = ID;
-document.body.appendChild(container);
+    <li>
+      Copy the CSS code and paste it in the CSS textboxt of OBS Browser Source dialog box. <br/>
+    </li>
 
-// Move comments to our container
-const commentList = document.querySelector('.rq0escxv.j83agx80.cbu4d94t.eg9m0zos.fh5enmmv.k4urcfbm');
-container.appendChild(commentList);
+    <li>
+      Start your stream. Both in OBS and Facebook.
+    </li>
 
-// Remove all elements in this page that is not ours, a script, or a link tag.
+    <li>
+      Copy the direct link to your stream by Right-clicking on the "Just Now" under your name, and selecting "Copy link address".
+    </li>
+
+    <li>
+      Visit your Stream in OBS Browser by either pasting it in OBS Browser's address bar i.e in <code>http://localhost:9222 (or whatever port you put in)</code>
+    </li>
+
+    <li>
+      Click the Network tab and filter by "WS" (which means WebSocket).
+    </li>
+
+    <li>
+      If you did not see anything in there, just refresh the OBS Browser. There's a refresh button in there.
+    </li>
+
+    <li>
+      Click the "Initiator" so we can see the code that creates the realtime connection Facebook uses.
+    </li>
+
+    <li>
+      Click the Pretty Print button at the bottom. It looks like a pair of brackets "{}".
+    </li>
+
+    <li>
+      Add a breakpoint to the line. To confirm, it has the "new WebSocket" on that line.<br/>
+      This will stop the code execution so we can execute the code we need first.
+    </li>
+
+    <li>
+      Refresh OBS Browser again.
+    </li>
+
+    <li>
+      Paste the <a href="#step-1-code">Step 1 code</a>.
+    </li>
+
+    <li>
+      Continue the code execution so the webpage works.<br>
+      Go to "Sources" tab and click the blue play button. If it paused again, which happens sometimes, just click it again.
+    </li>
+
+    <li>
+      Paste the <a href="#step-2-code">Step 2 code</a>.
+    </li>
+
+    <li>
+      Done. Enjoy.
+    </li>
+</ol>
+
+<h2>The Codes</h2>
+
+<h3>CSS Code</h3>
+<pre id="css-code" class="copy-code"><code class="language-css">html {
+  font-size: 16px;
+}
+
+body {
+  height: 100vh;
+}
+
+#obs-fb-live-comments {
+  list-style-type: none;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  min-height: 100%;
+
+  margin: 16px;
+  overflow: hidden;
+}
+
+.message + .message {
+  margin-top: 8px;
+}
+
+.message {
+  border-radius: 12px;
+  padding: 12px;
+  background: #424242;
+  color: #eee;
+}
+
+.message__author {
+  font-weight: 600;
+}
+
+.message__body {
+  font-size: 18px;
+}</code></pre>
+
+<h3>Step 1 Code</h3>
+
+<pre id="step-1-code" class="copy-code"><code class="language-javascript">// Copy the original WebSocket function
+// because we are going to override it.
+const NativeWebSocket = window.WebSocket;
+
+// Override original WebSocket so we can
+// have a reference to the instance FB will use.
+// They only use 1 connection (at least based on my experience).
+// Can't find a way to make a connection to them manually.
+window.WebSocket = function(...args) {
+  const instance = new NativeWebSocket(...args);
+  window.chat = instance;
+  return instance;
+}
+</code></pre>
+
+<h3>Step 2 Code</h3>
+
+<pre id="step-2-code" class="copy-code"><code class="language-javascript">// Remove all elements in the page.
 Array.prototype.forEach.call(document.body.children, function (el) {
-    const tag = el.tagName.toLowerCase();
+  document.body.removeChild(el);
+})
 
-    if (el.id !== ID && tag !== "script" && tag !== "link" && tag !== "style") {
-    document.body.removeChild(el);
+// Create our chat container
+const ID = 'obs-fb-live-comments';
+const containerElement = document.createElement('div');
+containerElement.id = ID;
+
+// Put our container to the page.
+document.body.appendChild(containerElement);
+
+// Make the webpage transparent and hide scrollbar
+// so we can use it as overlay in OBS.
+document.documentElement.style.setProperty('overflow', 'hidden', 'important');
+document.body.style.setProperty('overflow', 'hidden', 'important');
+document.body.style.setProperty('background', 'rgba(0,0,0,0)', 'important');
+
+function createCommentElement({ author, message }) {
+  const commentEl = document.createElement('div');
+  commentEl.classList.add('message');
+
+  const authorEl = document.createElement('div');
+  authorEl.classList.add('message__author');
+  authorEl.textContent = author;
+
+  const bodyEl = document.createElement('div')
+  bodyEl.classList.add('message__body')
+  bodyEl.textContent = message;
+
+  commentEl.appendChild(authorEl);
+  commentEl.appendChild(bodyEl);
+
+  return commentEl;
+}
+
+// Listen for new comments and do stuff
+window.chat.addEventListener('message', evt => {
+  const decoder = new TextDecoder("utf-8");
+  const rootJson = decoder.decode(evt.data); // The message seems to container a "topic" name at the start.
+  // I think it is MQTT stuff and I do not know how to work with it
+  // especially in the browser AND without loading external scripts.
+
+  const normalizedJson = rootJson.slice(rootJson.indexOf('{'));
+
+  try {
+    var _parsedJson$frames, _parsedData$data, _parsedData$data$live;
+
+    const parsedJson = JSON.parse(normalizedJson);
+    const rootData = (_parsedJson$frames = parsedJson.frames) === null || _parsedJson$frames === void 0 ? void 0 : _parsedJson$frames[0].data;
+
+    if (!rootData) {
+      return;
     }
+
+    console.log("Has rootData. Parsing data now.");
+    const parsedData = JSON.parse(atob(rootData.data));
+
+    if (!parsedData) {
+      return;
+    }
+
+    console.log("Has parsedData. Parsing comment now.");
+    const comment = parsedData === null || parsedData === void 0 ? void 0 : (_parsedData$data = parsedData.data) === null || _parsedData$data === void 0 ? void 0 : (_parsedData$data$live = _parsedData$data.live_video_comment_create_subscribe) === null || _parsedData$data$live === void 0 ? void 0 : _parsedData$data$live.comment;
+
+    if (!comment) {
+      return;
+    }
+
+    console.log('Has a comment.', {
+      comment
+    });
+    console.log({
+      author: comment.author.name,
+      message: comment.body.text
+    }); // Insert comment element to the container
+
+    containerElement.appendChild(createCommentElement({
+      author: comment.author.name,
+      message: comment.body.text
+    })); // Scroll to the last comment
+
+    document.body.scrollTop = document.body.scrollHeight;
+  } catch (e) {// not the data we want or just dont crash at all whatever happens.
+  }
 });
-
-// Put our own stylesheet
-const style = document.createElement("style");
-style.type = "text/css";
-
-const styleContent = document.createTextNode("html{font-size:16px;} body{background:rgba(0,0,0,0) !important;overflow: hidden !important;}#obs-fb-live-comments{width:100vw;height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:16px }.eg9m0zos.datstx6m {background:rgba(0,0,0,0);height: auto !important; overflow-y: hidden !important;}._6coi.oygrvhab.ozuftl9m.l66bhrea.linoseic,.pgctjfs5.sf5mxxl7.q9uorilb{display:none}.nqmvxvec.s45kfl79.emlxlaya.bkmhp75w.spb7xbtv.a8c37x1j.fv0vnmcu.rs0gx3tq.l9j0dhe7{ align-self:center !important;}");
-style.appendChild(styleContent);
-document.head.appendChild(style)
-
-// Scroll to the last comment
-commentList.scrollTop = commentList.scrollHeight
 </code></pre>
 
 <h2 id="how-to-start-obs-with-remote-debugging">How To Start OBS With Remote Debugging</h2>
@@ -173,25 +354,23 @@ commentList.scrollTop = commentList.scrollHeight
     class="token operator">=</span>9222 <span class="token punctuation">(</span>or whatever port you like<span
     class="token punctuation">)</span>
 </code></pre>
-<h2 id="faqs">FAQs</h2>
-<h3 id="the-comment-is-clipped-or-not-wrapping-to-the-next-line.">The comment is clipped or not wrapping to the next
-    line.</h3>
-<p>Change your Browser Source resolution. I start with 640x360.</p>
 
 <h2 id="issues-or-suggestions">Issues or Suggestions</h2>
 
 <p>
-    Head over to this website's
-    <a href="https://github.com/xxRockOnxx/obs-fb-live-comments/">GitHub repository</a>
-    and open an Issue.
+    Head over to this website's <a href="https://github.com/xxRockOnxx/obs-fb-live-comments/">GitHub repository</a> and open an Issue.<br/>
+    Or just comment in the YouTube video.
 </p>
 
 <script>
     const codeEl = document.getElementById('js-code')
-    codeEl.addEventListener('click', evt => {
-        navigator.clipboard.writeText(codeEl.textContent)
-        window.alert('Code copied to clipboard!')
-    })
+
+    document.querySelectorAll('.copy-code').forEach((el) => {
+      el.addEventListener('click', evt => {
+          navigator.clipboard.writeText(el.textContent)
+          window.alert('Code copied to clipboard!')
+      })
+    });
 </script>
 
 <!-- Fathom - simple website analytics - https://github.com/usefathom/fathom -->
