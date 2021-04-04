@@ -30,7 +30,7 @@ When that happens, visit this website again and check for an updated instruction
 If there's none, let me know by submitting an issue on the repo.
 
 
-## Instructions (Updated Aug 04, 2020; Facebook's new theme)
+## Instructions (Updated Apr 04, 2021; Better code that doesn't rely on DOM)
 Instructions at https://obs-fb-live-comments.web.app
 
 Tired of updating both the website and this README file so just head over there.
