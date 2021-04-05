@@ -23,13 +23,6 @@ Hence, the disapproval. If I have to point it out to you, what we want is not pa
 
 **BUT**, "Where there is a will, there is a way", so here you go.
 
-This method has a chance of not working if Facebook updated their page.
-
-When that happens, visit this website again and check for an updated instructions.
-
-If there's none, let me know by submitting an issue on the repo.
-
-
 ## Instructions (Updated Apr 04, 2021; Better code that doesn't rely on DOM)
 Instructions at https://obs-fb-live-comments.web.app
 
