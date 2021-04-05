@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>OBS FB Live Comments</title>
+    <meta name="description" content="This is for Facebook users who do not want to create a Facebook Page and share their stream publicly just to show their comments feed on their stream.">
+    <title>OBS Personal Facebook Live Comments</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
     <style>
         * {
@@ -21,13 +22,13 @@
         }
 
         a {
-            color: #0366d6;
+            color: #0EA5E9;
             text-decoration: none;
         }
 
         blockquote {
             padding: 0 1em;
-            color: #6a737d;
+            color: #525252;
             border-left: .25em solid #dfe2e5;
             margin-left: 0;
             margin-right: 0;
@@ -64,23 +65,28 @@
         h1,
         h2 {
             padding-bottom: .3em;
-            border-bottom: 1px solid #eaecef;
+            border-bottom: 2px solid #D4D4D4;
         }
     </style>
 </head>
 <body id="markdown">
 
-<h1 id="obs-facebook-live-comments">OBS Facebook Live Comments</h1>
+<h1 id="obs-facebook-live-comments">OBS Personal Facebook Live Comments</h1>
+
 <p>This is for Facebook users who do not want to create a Facebook Page and share their stream publicly just to show
     their comments feed on their stream.</p>
-<p><strong>Use this at your own Risk</strong>.</p>
+
+    <p><strong>Use this at your own Risk</strong>.</p>
+
 <p>I attempted making a proper app that allows people to login using their Facebook account and simply copying a link to
     their Browser Source (<a href="https://github.com/xxRockOnxx/obs-fb-live-comments/issues/2">see more here</a>)
     similar to TidyLabs if you are DLive user, but unfortunately Facebook did not approve the app.</p>
-<p>The app requires approval from Facebook so it can access your Live Streams but according to <a
-    href="https://developers.facebook.com/docs/facebook-login/permissions/#reference-user_videos">here</a>:</p>
+
+<p>The app requires approval from Facebook so it can access your Live Streams but according to the <a
+    href="https://developers.facebook.com/docs/facebook-login/permissions/#reference-user_videos">allowed usages</a>:</p>
+
 <blockquote>
-    <h3 id="user_videos"><strong>user_videos</strong></h3>
+    <p style="font-size: 1.5rem;"><strong>user_videos</strong></p>
     <p>Requires App Review</p>
     <p>The <code>user_videos</code> permission allows your app to read a list of videos uploaded by a user.</p>
     <p>Allowed Usage:</p>
@@ -95,9 +101,6 @@
 
 <p>Hence, the disapproval. If I have to point it out to you, what we want is not part of the Allowed Usage.</p>
 <p><strong>BUT</strong>, “Where there is a will, there is a way”, so here you go.</p>
-<p>This method has a chance of not working if Facebook updated their page.</p>
-<p>When that happens, visit this website again and check for an updated instructions.</p>
-<p>If there's none, let me know by submitting an issue on the repo.</p>
 
 <h2 id="instructions">Instructions (Updated Apr 04, 2021; Better code that doesn't rely on DOM)</h2>
 
@@ -131,7 +134,7 @@
     </li>
 
     <li>
-      Copy the CSS code and paste it in the CSS textboxt of OBS Browser Source dialog box. <br/>
+      Copy the <a href="#css-code">CSS code</a> and paste it in the CSS textboxt of OBS Browser Source dialog box. <br/>
     </li>
 
     <li>
@@ -177,7 +180,8 @@
 
     <li>
       Continue the code execution so the webpage works.<br>
-      Go to "Sources" tab and click the blue play button. If it paused again, which happens sometimes, just click it again.
+      Go to "Sources" tab and click the blue play button.<br>
+      If it paused again, which happens sometimes, just click it again.
     </li>
 
     <li>
@@ -191,8 +195,11 @@
 
 <h2>The Codes</h2>
 
-<h3>CSS Code</h3>
-<pre id="css-code" class="copy-code"><code class="language-css">html {
+<h3 id="css-code">CSS Code</h3>
+
+<p>You can customize this if you know CSS.</p>
+
+<pre class="copy-code"><code class="language-css">html {
   font-size: 16px;
 }
 
@@ -232,9 +239,9 @@ body {
   font-size: 18px;
 }</code></pre>
 
-<h3>Step 1 Code</h3>
+<h3 id="step-1-code">Step 1 Code</h3>
 
-<pre id="step-1-code" class="copy-code"><code class="language-javascript">// Copy the original WebSocket function
+<pre class="copy-code"><code class="language-javascript">// Copy the original WebSocket function
 // because we are going to override it.
 const NativeWebSocket = window.WebSocket;
 
@@ -249,9 +256,9 @@ window.WebSocket = function(...args) {
 }
 </code></pre>
 
-<h3>Step 2 Code</h3>
+<h3 id="step-2-code">Step 2 Code</h3>
 
-<pre id="step-2-code" class="copy-code"><code class="language-javascript">// Remove all elements in the page.
+<pre class="copy-code"><code class="language-javascript">// Remove all elements in the page.
 Array.prototype.forEach.call(document.body.children, function (el) {
   document.body.removeChild(el);
 })
@@ -291,10 +298,11 @@ function createCommentElement({ author, message }) {
 // Listen for new comments and do stuff
 window.chat.addEventListener('message', evt => {
   const decoder = new TextDecoder("utf-8");
-  const rootJson = decoder.decode(evt.data); // The message seems to container a "topic" name at the start.
+  const rootJson = decoder.decode(evt.data);
+
+  // The message seems to container a "topic" name at the start.
   // I think it is MQTT stuff and I do not know how to work with it
   // especially in the browser AND without loading external scripts.
-
   const normalizedJson = rootJson.slice(rootJson.indexOf('{'));
 
   try {
@@ -324,18 +332,22 @@ window.chat.addEventListener('message', evt => {
     console.log('Has a comment.', {
       comment
     });
+
     console.log({
       author: comment.author.name,
       message: comment.body.text
-    }); // Insert comment element to the container
+    });
 
+    // Insert comment element to the container
     containerElement.appendChild(createCommentElement({
       author: comment.author.name,
       message: comment.body.text
-    })); // Scroll to the last comment
+    }));
 
+    // Scroll to the last comment
     document.body.scrollTop = document.body.scrollHeight;
-  } catch (e) {// not the data we want or just dont crash at all whatever happens.
+  } catch (e) {
+    // not the data we want or just dont crash at all whatever happens.
   }
 });
 </code></pre>
