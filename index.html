@@ -105,9 +105,7 @@
 <h2 id="instructions">Instructions (Updated Apr 04, 2021; Better code that doesn't rely on DOM)</h2>
 
 <div style="position: relative; padding-top: 56.25%;">
-    <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-        <iframe width="100%" height="100%" src="https://www.youtube.com/embed/77Ixvbi0zOc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
+    <div id="yt-container" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;"></div>
 </div>
 
 <ol style="list-style-type: decimal;">
@@ -375,6 +373,24 @@ window.chat.addEventListener('message', evt => {
 </p>
 
 <script>
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        const iframe = document.createElement('iframe')
+
+        iframe.width = '100%'
+        iframe.height = '100%'
+        iframe.frameBorder = '0'
+        iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+        iframe.src = 'https://www.youtube.com/embed/77Ixvbi0zOc'
+        iframe.allowFullscreen = true
+
+        document.getElementById('yt-container').appendChild(iframe)
+        observer.disconnect()
+      }
+    })
+
+    observer.observe(document.getElementById('instructions'))
+
     const codeEl = document.getElementById('js-code')
 
     document.querySelectorAll('.copy-code').forEach((el) => {
