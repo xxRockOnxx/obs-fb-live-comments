@@ -34,7 +34,11 @@ function websocketHandler(evt) {
 
   try {
     const parsedJson = JSON.parse(normalizedJson);
-    const comment = parsedJson?.data?.live_video_comment_create_subscribe?.comment;
+
+    // Not all OBS version supports Optional Chaining atm.
+    // const comment = parsedJson?.data?.live_video_comment_create_subscribe?.comment;
+
+    const comment = (((parsedJson || {}).data || {}).live_video_comment_create_subscribe || {}).comment;
 
     // The message received does not contain a comment.
     // Could be for other stuff that we don't need.
